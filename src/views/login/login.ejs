@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #f0f4f8;
+    --card-bg: #ffffff;
+    --accent: #4f46e5;
+    --accent-hover: #4338ca;
+    --text: #111827;
+    --muted: #6b7280;
+    --error-bg: #fee2e2;
+    --error-text: #b91c1c;
+    --radius: 16px;
+    --shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 40px 30px;
+    max-width: 380px;
+    width: 100%;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.login-card h1 {
+    color: var(--accent);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+form { width: 100%; }
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+label {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-size: 0.95rem;
+    color: var(--muted);
+    pointer-events: none;
+    transition: all 0.3s ease;
+    background: var(--card-bg);
+    padding: 0 4px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 14px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,70,229,0.2); }
+
+input:focus + label,
+input:not(:placeholder-shown) + label {
+    top: -8px;
+    font-size: 0.8rem;
+    color: var(--accent);
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background: linear-gradient(90deg, #4338ca, #6d28d9);
+    transform: translateY(-2px);
+}
+
+.error-message {
+    width: 100%;
+    background: var(--error-bg);
+    color: var(--error-text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    text-align: center;
+    margin-bottom: 20px;
+    display: none;
+}
+
+.error-message.show { display: block; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media(max-width: 420px){
+    .login-card { padding: 30px 20px; }
+    h1 { font-size: 1.75rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="login-card">
+    <h1>Login</h1>
+    <div id="error" class="error-message <% if(typeof message !== 'undefined' && message!=null ){ %>show<% } %>">
+        <% if(typeof message !== 'undefined' && message!=null ){ %>
+            <p><%= message %></p>
+        <% } %>
+    </div>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <input type="text" name="username" placeholder=" " required>
+            <label>Username</label>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" placeholder=" " required>
+            <label>Password</label>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Login">
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

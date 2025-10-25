@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Author Dashboard</title>
+<style>
+    /* --- Reset & Base --- */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6fa;
+        color: #333;
+        padding: 20px;
+    }
+
+    /* --- Header --- */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+    }
+    header h1 {
+        font-size: 1.8rem;
+        color: #1769ff;
+    }
+    header .welcome {
+        font-size: 1rem;
+        color: #555;
+        margin-top: 5px;
+    }
+    header a.add-post {
+        background-color: #1769ff;
+        color: white;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        transition: 0.2s;
+    }
+    header a.add-post:hover {
+        background-color: #0e57d0;
+    }
+
+    /* --- Table Container --- */
+    .table-container {
+        overflow-x: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+    }
+    th, td {
+        padding: 12px 15px;
+        text-align: left;
+    }
+    th {
+        background-color: #1769ff;
+        color: white;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    tr:hover {
+        background-color: #eef4ff;
+    }
+
+    /* --- Action Buttons --- */
+    .btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: 0.2s;
+        margin-right: 5px;
+    }
+    .btn.edit {
+        background-color: #ff9800;
+        color: white;
+    }
+    .btn.edit:hover {
+        background-color: #e68900;
+    }
+    .btn.delete {
+        background-color: #e53935;
+        color: white;
+    }
+    .btn.delete:hover {
+        background-color: #c62828;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        table {
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 10px 12px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>Author Dashboard</h1>
+        <div class="welcome">Welcome, <%=user.name%>!</div>
+    </div>
+    <% if (typeof message !=='undefined' && message) { %>
+            <div class="message" style="
+            background: #e0f2ff;
+            color: #0b5394;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-weight: 500;">
+                <%= message %>
+            </div>
+            <% } %>
+    <a href="/article/add" class="add-post">Add Post</a>
+</header>
+
+<section class="table-container">
+    <h2>Articles</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% articles.forEach(article => { %>
+            <tr>
+                <td><%= article.articleId %></td>
+                <td><%= article.title %></td>
+                <td class="created" data-date="<%= article.created_at %>"></td>
+                <td class="updated" data-date="<%= article.updated_at %>"></td>
+                <td>
+                    <button class="btn edit" onclick="viewArticle('<%= article.articleId %>')">view</button>
+                    <button class="btn delete" onclick="deleteArticle(this, '<%= article.articleId %>')">Delete</button>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</section>
+
+<script>
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+        const day = String(date.getDate()).padStart(2,'0');
+        const month = String(date.getMonth()+1).padStart(2,'0');
+        const year = date.getFullYear();
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2,'0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        hours = String(hours).padStart(2,'0');
+        return `${day}-${month}-${year} (${dayName}) at ${hours}:${minutes} ${ampm}`;
+    }
+
+    document.querySelectorAll('td.created').forEach(td => td.textContent = formatDate(td.dataset.date));
+    document.querySelectorAll('td.updated').forEach(td => td.textContent = formatDate(td.dataset.date));
+
+    async function deleteArticle(e, id){
+        const response = await fetch(`/article/delete/${id}`);
+        const data = await response.json();
+        if(data.success){
+            alert(data.message);
+            e.closest('tr').remove();
+        } else {
+            alert('Something went wrong');
+        }
+    }
+
+    function viewArticle(id){
+        window.location.href = `/post/${id}`;
+    }
+</script>
+
+</body>
+</html>
+    

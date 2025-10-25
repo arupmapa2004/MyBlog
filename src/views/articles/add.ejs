@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Article</title>
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.snow.css" rel="stylesheet">
+<style>
+    /* --- Base Reset --- */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f8;
+        color: #333;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    /* --- Container Card --- */
+    .container {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .container:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+        text-align: center;
+        color: #1769ff;
+        margin-bottom: 25px;
+        font-size: 2rem;
+    }
+
+    /* --- Form Styling --- */
+    form div {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #444;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    input[type="text"]:focus,
+    input[type="file"]:focus {
+        border-color: #1769ff;
+        box-shadow: 0 0 5px rgba(23,105,255,0.3);
+    }
+
+    /* --- Quill Editor --- */
+    #editor {
+        height: 200px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    #editor.ql-container.ql-snow {
+        border: none;
+        border-radius: 8px;
+    }
+
+    /* --- Submit Button --- */
+    input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background-color: #1769ff;
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+    input[type="submit"]:hover {
+        background-color: #0e57d0;
+        transform: translateY(-2px);
+    }
+
+    /* --- Message Box --- */
+    .message {
+        background: #e0f2ff;
+        color: #0b5394;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 600px) {
+        .container {
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Add Article</h1>
+
+    <% if(typeof message !== 'undefined' && message != null) { %>
+        <p class="message"><%= message %></p>
+    <% } %>
+
+    <form action="/article/add" method="post" enctype="multipart/form-data">
+        <div>
+            <label>Article Title</label>
+            <input type="text" name="title" placeholder="Enter article title" required>
+        </div>
+
+        <div>
+            <label>Content</label>
+            <div id="editor"></div>
+            <input type="hidden" name="content">
+        </div>
+
+        <div>
+            <label>Upload Image</label>
+            <input type="file" name="image" accept=".jpg,.jpeg,.png" required>
+        </div>
+
+        <div>
+            <input type="submit" value="Submit Article">
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.4/dist/quill.min.js"></script>
+<script>
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: 'Write your article content here...',
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['link', 'image'],
+                ['clean']
+            ]
+        }
+    });
+
+    // On form submit, update hidden input with Quill content
+    const form = document.querySelector('form');
+    form.onsubmit = () => {
+        const contentInput = form.querySelector('input[name=content]');
+        contentInput.value = quill.root.innerHTML;
+    };
+</script>
+
+</body>
+</html>
