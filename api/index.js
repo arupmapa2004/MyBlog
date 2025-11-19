@@ -1,13 +1,13 @@
 import express from 'express';
 import session from 'express-session';
 import dotenv from 'dotenv';
-import db, { testDBConnection } from './db.js';
+import  { testDBConnection } from './db.js';
 
-import loginRouter from './src/routes/login.js';
-import authorRouter from './src/routes/author.js';
-import adminRouter from './src/routes/admin.js';
-import articleRouter from './src/routes/articles.js';
-import homeRouter from './src/routes/home.js';
+import loginRouter from '../src/routes/login.js';
+import authorRouter from '../src/routes/author.js';
+import adminRouter from '../src/routes/admin.js';
+import articleRouter from '../src/routes/articles.js';
+import homeRouter from '../src/routes/home.js';
 
 dotenv.config();
 

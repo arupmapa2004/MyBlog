@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/app.js": {
+      "runtime": "nodejs22.x"
+    }
+  }
+}
