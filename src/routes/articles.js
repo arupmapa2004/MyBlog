@@ -1,5 +1,5 @@
 import express from 'express';
-import db from '../../api/db.js';
+import db from '../../db.js';
 import multer from 'multer';
 import path from 'path';
 
