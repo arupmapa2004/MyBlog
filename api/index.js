@@ -2,7 +2,7 @@ import ServerlessHttp from "serverless-http";
 import express from "express";
 import session from "express-session";
 import dotenv from "dotenv";
-import { testDBConnection } from "../db.js";
+import { testDBConnection } from "./db.js";
 
 import loginRouter from "../src/routes/login.js";
 import authorRouter from "../src/routes/author.js";
